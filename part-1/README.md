@@ -11,7 +11,7 @@ The trick is performed with two magicians. In our case, one of the magicians wil
 To get an idea of how a similar trick is performed, watch a performance of [Al Stanger's Miracle Poker Machine](https://youtu.be/Ef0zy6cXvkY) presented by [Andy Martin](https://www.martinsmagic.com/). There are many videos of the Five Card Trick presented by [two amateur magicians](https://youtu.be/8rfuV12dGjA) and [one magician with a computer](https://youtu.be/MRGTA9y72nA).
 
 # Background
-Let's first review some basic terminology. A deck of cards has four suits: clubs ♣️, diamonds ♦️, hearts ♥️, and spades ♣️. Each suit has 13 cards: Ace, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King. Let's abbreviate Ace as _A_, Jack as _J_, Queen as _Q_, and King as _K_. Let's assume that Ace is the lowest value card, with a value of 1, and King is the highest value card, with a value of 13. Let's abbreviate the suits as _C_ for clubs, _D_ for diamonds, _H_ for hearts, and _S_ for spades. Additionally, if there are two cards with the same value, then the suit will break the tie. The suits are valued in alphabetical order.
+Let's first review some basic terminology. A deck of cards has four suits: clubs ♣️, diamonds ♦️, hearts ♥️, and spades ♣️. Each suit has 13 cards: Ace, 2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King. Let's abbreviate Ace as _A_, Jack as _J_, Queen as _Q_, and King as _K_. Let's assume that Ace is the lowest value card, with a value of 1, and King is the highest value card, with a value of 13. Let's abbreviate the suits as _C_ for clubs, _D_ for diamonds, _H_ for hearts, and _S_ for spades. Additionally, if there are two cards with the same value, then the suit will break the tie. The suits are valued in alphabetical order.
 
 Here are some examples of abbreviations using the given schema:
 
@@ -68,7 +68,13 @@ This means we need to tell the computer to add 5 to the King and that the secret
 
 We tell the computer the first card is _KH_, and then order the cards high, low, middle to tell the computer to add 5 to the King. We enter _JD_, _AC_, _7D_ which means add 5. Remember to use the formula (_base_ _card_ _value_ + 5) % 13 which evaluates to 5. Since the base card is a heart, the computer responds with 5H.
 
+## Tips
 
+When working with if-else-if-else conditions here are some tips to keep in mind:
+
+* Always handle the exceptions first and leave the general case for the else statement
+* Try to have one entry point and one exit for conditions and functions; use a variable such as `return_value` to hold on to the value you wish to return and then return the variable at the end of the function.
+* Write comments in clear, plain english that explain to you what each case is supposed to do. This will help keep your code organized and help you fix any errors.
 
 ## Requirements
 
@@ -88,6 +94,8 @@ string letter_e = string(1, hello.at(1));
 ```
 
 If you need to, use  [`std::stoi()`](https://en.cppreference.com/w/cpp/string/basic_string/stol) to convert a string to an integer. Use the try/catch pattern learned from the previous lab to catch errors.
+
+Write a function which will convert a string which represents a card's value to an integer. Remember that a card can have the numerical value of 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 yet the values are represented by strings "A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K". Handle the exceptional cases "A", "J", "Q", and "K" by mapping those strings onto the integer values 1, 11, 12, and 13 and use `stoi()` for all the other cases. Always use `try` and `catch` with `stoi()` to catch errors. The functions prototype is `int CardValue(const string& string_value);`.
 
 Write a function which will convert an integer value to a card's string value. The function prototype is `string IntCardValueToString(int value);`. The input is an integer such as 1 and it returns a string 'A'. If the value doesn't need to be converted to a letter, use the [`to_string()`](https://en.cppreference.com/w/cpp/string/basic_string/to_string) function to convert from an integer to a string.
 
