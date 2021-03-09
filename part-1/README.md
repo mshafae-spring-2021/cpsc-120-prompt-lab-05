@@ -90,8 +90,31 @@ When using the `at()` method it will return a `char` type. Convert the `char` ty
 
 ```
 string hello = "Hello World";
+// The first letter is at position 0
+string letter_H = string(1, hello.at(0));
+// The second letter is at position 1
 string letter_e = string(1, hello.at(1));
+// The letter d
+// Get the size of the string, subtract 1 which will give the location of the last letter
+string last_letter = string(1, hello.at(hello.size() - 1));
 ```
+
+When using `at()` you should wrap each usage with a try/catch just like the try/catch pattern learned from the previous lab to catch errors.
+
+```
+string hello = "Hello World";
+string letter_e;
+
+try {
+  letter_e = string(1, hello.at(1));
+}catch (const std::exception& e) {
+  ErrorMessage();
+  // exit will end the program abruptly and return 1 to the operating system.
+  exit(1);
+}
+```
+
+Use the [`exit()`](https://en.cppreference.com/w/cpp/utility/program/exit) function to exit from your program if an error occurs in a function. Remember to `#include <cstdlib>` to take advantage of the `exit()` function.
 
 If you need to, use  [`std::stoi()`](https://en.cppreference.com/w/cpp/string/basic_string/stol) to convert a string to an integer. Use the try/catch pattern learned from the previous lab to catch errors.
 
