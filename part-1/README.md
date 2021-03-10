@@ -21,9 +21,13 @@ Here are some examples of abbreviations using the given schema:
 * The 7 of clubs is less than the King of clubs, or _7C_ < _KC_
 * The Ace of spades is greater than the Ace of diamonds, or _AS_ > _AD_
 
+Typically, a deck of cards is ordered by suit and then by value. This means that all the clubs are together from Ace to King, all the diamonds are together from Ace to King, all the hearts are together from Ace to King, and all the spades are together from Ace to King. To facilitate the calculations in this trick, the sorting of the deck has to be changed. The trick requires that cards be ordered by value and then by suit. This means that the cards are ordered as _AC, AD, AH, AS, 1C, 1D, 1H, 1S,…, QC, QD, QH, QS, KC, KD, KH, KS_. (This detail should not be shared with the spectator.)
+
 # Explanation
 
-The trick is a self working card trick which uses a scheme to encode the hidden fifth card's suit and value in the way the other four other cards are presented. The foundation of this trick is discrete math and Michael Kleber wrote a wonderful article about this trick in [The Mathematical Intelligencer 24, 9–11 (2002)](https://doi-org.lib-proxy.fullerton.edu/10.1007/BF03025305) which explains the math in great detail. (You can also [find this article](https://bfy.tw/QW56) through your favorite search engine.)
+The trick is a self working card trick which uses a scheme to encode the hidden fifth card's suit and value in the way the other four other cards are presented.
+
+The foundation of this trick is discrete math and Michael Kleber wrote a wonderful article about this trick in [The Mathematical Intelligencer 24, 9–11 (2002)](https://doi-org.lib-proxy.fullerton.edu/10.1007/BF03025305) which explains the math in great detail. (You can also [find this article](https://bfy.tw/QW56) through your favorite search engine.)
 
 Starting with a deck of cards, five cards are selected. Let's imagine the following cards are selected:  or 3 of clubs, 7 of diamonds, 2 of clubs, 10 of spades, and the 3 of hearts.
 
@@ -49,7 +53,7 @@ In our example, let's select the base card as _2C_ and the secret card as _3C_. 
 
 The magician begins by presenting the base card to the computer. This tells the computer the suit and the base value to start from.
 
-Next the magician must present the remaining three cards in a certain order to signal how much to add to the base card. This requires a little bit of subterfuge. Using the table below, order the cards such that they communicate what you want to add to the base card. In the given example, we wish to add one so the cards will be order low, middle, high which is _3H_, _7D_, _10S_.
+Next the magician must present the remaining three cards in a certain order to signal how much to add to the base card. Let's call this _secret steps_. This requires a little bit of subterfuge. Using the table below, order the cards such that they communicate what you want to add to the base card. In the given example, we wish to add one so the cards will be order low, middle, high which is _3H_, _7D_, _10S_.
 
 | Order | Value to Add |
 | :--- | :---: |
@@ -66,9 +70,13 @@ Another example is how we can use modulo arithmetic to perform the trick. Let's 
 
 This means we need to tell the computer to add 5 to the King and that the secret card's suit is heart.
 
-We tell the computer the first card is _KH_, and then order the cards high, low, middle to tell the computer to add 5 to the King. We enter _JD_, _AC_, _7D_ which means add 5. Remember to use the formula (_base_ _card_ _value_ + 5) % 13 which evaluates to 5. Since the base card is a heart, the computer responds with 5H.
+We tell the computer the first card is _KH_, and then order the cards high, low, middle to tell the computer to add 5 to the King. We enter _JD_, _AC_, _7D_ which means the _secret steps_ is +5. Remember to use the formula (_base card value_ + 5) % 13 which evaluates to 5. Since the base card is a heart, the computer responds with 5H.
 
 ## Tips
+
+To facilitate calculations, imagine the deck as one continuous series of cards that are numbered from 1 to 52. Instead of ordering them by suit, order the cards by value. This means that the cards are ordered as _AC, AD, AH, AS, 1C, 1D, 1H, 1S,…, QC, QD, QH, QS, KC, KD, KH, KS_. This subtlety can be accomplished by first taking the cards value and then adding 0 for clubs, 1 for diamonds, 2, for hearts, and 3 for spades. In this fashion the cards _6C_, _6D_, _6H_, and _6S_ will have the values 6, 7, 8, 9. This facilitates looking up the _secret steps_.
+
+Convert the cards to initially have values between 0 and 12 where Ace is 0 and King is 12. Then use the formula card_value * 4 + SuitOffset() to map the card into the range 1 through 52. The value card_value is the value of the card between 0 and 12, and SuiteOffset() returns 1 for clubs, 2 for diamonds, 3 for hearts, and 4 for spades.
 
 When working with if-else-if-else conditions here are some tips to keep in mind:
 
@@ -126,9 +134,21 @@ Write a function which will calculate the secret card's value. The function prot
 
 Write a function that will return what value to add to the base card given the three other cards inputted. The function prototype is `int SecretSteps(const string& card_one, const string& card_two, const string& card_three);`. If two or more cards have the same value, use the card's suit to determine the order.
 
-The function `SecretSteps()` has very complicated logic if we mix integer values with string suits. Instead, write a function named `SuitMultiplier()` which maps a given card into a numerical range. For example, all the clubs will be the values 1 through 13, all the diamonds will be 14 through 26, all the hearts will be 27 through 39, and all the spades will be 40 through 52. This way, comparing the three cards given to `SecretSteps()` is straightforward. The function prototype is `int SuitMultiplier(string suit);`. The function takes a suit as a parameter and returns the starting index of that suit.
+The function `SecretSteps()` has very complicated logic if we mix integer values with string suits. Instead, follow the advice given in the tip to imagine the cards ordered by value and then by suit. Write a function named `SuitOffset()` which maps a given card's suit to an offset.
+
+* Clubs have a 1 offset
+* Diamonds have a 2 offset
+* Hearts have a 3 offset
+* Spaders have a 4 offset
+
+For example, _6C_, _6D_, _6H_, and _6S_ will have the values 6, 7, 8, 9 because _6C_ is 6 + 0, _6D_ is 6 + 1, _6H_ is 6 + 2, and _6S_ is 6 + 3. This way, comparing the three cards given to `SecretSteps()` is straightforward. The function prototype is `int SuitOffset(const string& suit);`. The function takes a suit as a parameter and returns the starting index of that suit.
 
 Write a function `void ErrorMessage();` which prints out `"This program may only be used by a qualified technician.\n"` whenever an error is encountered. Exit with a return status of 1 when there is an error.
+
+You may wish to write functions that retrive the suit or value of a given card represented by a string. These are short utility functions that make your program more readable.
+
+* string Suit(const string& card);
+* string Value(const string& card);
 
 You shall use [cout](https://en.cppreference.com/w/cpp/io/cout) to print messages to the terminal.
 
@@ -172,6 +192,19 @@ Start simple, and work your way up. Good tests are specific, cover a broad range
 Please ensure your program's output is identical to the example below.
 
 ```
-
+$ make
+set -e; clang++ -MM -g -Wall -pipe -std=c++14  mind_reader.cc \
+	| sed 's/\(mind_reader\)\.o[ :]*/\1.o mind_reader.d : /g' > mind_reader.d; \
+	[ -s mind_reader.d ] || rm -f mind_reader.d
+clang++ -g -Wall -pipe -std=c++14  -c mind_reader.cc
+clang++ -g -Wall -pipe -std=c++14 -o mind_reader mind_reader.o 
+$ ./mind_reader 
+This program may only be used by a qualified technician.
+$ ./mind_reader JC 6C KC 5D
+The card is 2C.
+$ ./mind_reader 6S QD JC KC
+The card is 9S.
+$ ./mind_reader 8D 8S AH 7S
+The card is KD.
 ```
 
