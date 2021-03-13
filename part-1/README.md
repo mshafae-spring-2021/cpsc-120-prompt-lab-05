@@ -4,14 +4,14 @@
 
 In this exercise, we shall write a program that will masquerade as a artificial intelligence. Imagine telling a friend or family member that in your introductory computer science class, you have learned how to write programs that can calculate what cards you have selected from a deck of cards. You may go on to explain that with a little more work, your computer program can predict what everyone was dealt in a poker game. For now, your program can predict the fifth card in a poker hand given the first four cards.
 
-William Fitch Cheney, Jr. was a mathematics professor at Tufts University, University of Connecticut, and the University of Hartford in the middle third of the 20th century passing away in 1974. Other than being a professor, he was a published amateur magician. In the book Math Miracles by Wallace Lee, a trick was published that is credited to Fitch Cheney. This trick uses discrete math, which is very important to a computer science student, to create an astounding effect.
+William Fitch Cheney, Jr. was a mathematics professor at Tufts University, University of Connecticut, and the University of Hartford in the middle third of the 20th century passing away in 1974. Other than being a professor, he was a published amateur magician. In the book _Math Miracles_ by Wallace Lee, a trick was published that is credited to Fitch Cheney. This trick uses discrete math, which is very important to a computer science student, to create an astounding effect.
 
 The trick is performed with two magicians. In our case, one of the magicians will be our computer program. The trick can be performed with any deck of playing cards. The deck can be a borrowed deck and can be shuffled as many times as one would like. The trick requires no preparation or gaffs. Five cards are randomly selected from the deck and given to the the human magician. The human magician then shows (inputs) four of the five cards to the computer magician. The computer magician reveals the unseen fifth card.
 
 To get an idea of how a similar trick is performed, watch a performance of [Al Stanger's Miracle Poker Machine](https://youtu.be/Ef0zy6cXvkY) presented by [Andy Martin](https://www.martinsmagic.com/). There are many videos of the Five Card Trick presented by [two amateur magicians](https://youtu.be/8rfuV12dGjA) and [one magician with a computer](https://youtu.be/MRGTA9y72nA).
 
 # Background
-Let's first review some basic terminology. A deck of cards has four suits: clubs ♣️, diamonds ♦️, hearts ♥️, and spades ♣️. Each suit has 13 cards: Ace, 2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King. Let's abbreviate Ace as _A_, Jack as _J_, Queen as _Q_, and King as _K_. Let's assume that Ace is the lowest value card, with a value of 1, and King is the highest value card, with a value of 13. Let's abbreviate the suits as _C_ for clubs, _D_ for diamonds, _H_ for hearts, and _S_ for spades. Additionally, if there are two cards with the same value, then the suit will break the tie. The suits are valued in alphabetical order.
+Let's first review some basic terminology. A deck of cards has four suits: clubs ♣️, diamonds ♦️, hearts ♥️, and spades ♠️. Each suit has 13 cards: Ace, 2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King. Let's abbreviate Ace as _A_, Jack as _J_, Queen as _Q_, and King as _K_. Let's assume that Ace is the lowest value card, with a value of 0, and King is the highest value card, with a value of 12. (In computing, we like counting from zero rather than 1.) Let's abbreviate the suits as _C_ for clubs, _D_ for diamonds, _H_ for hearts, and _S_ for spades. Additionally, if there are two cards with the same value, then the suit will break the tie. The suits are valued in alphabetical order.
 
 Here are some examples of abbreviations using the given schema:
 
@@ -21,24 +21,24 @@ Here are some examples of abbreviations using the given schema:
 * The 7 of clubs is less than the King of clubs, or _7C_ < _KC_
 * The Ace of spades is greater than the Ace of diamonds, or _AS_ > _AD_
 
-Typically, a deck of cards is ordered by suit and then by value. This means that all the clubs are together from Ace to King, all the diamonds are together from Ace to King, all the hearts are together from Ace to King, and all the spades are together from Ace to King. To facilitate the calculations in this trick, the sorting of the deck has to be changed. The trick requires that cards be ordered by value and then by suit. This means that the cards are ordered as _AC, AD, AH, AS, 1C, 1D, 1H, 1S,…, QC, QD, QH, QS, KC, KD, KH, KS_. (This detail should not be shared with the spectator.)
+Typically, a deck of cards is ordered by suit and then by value. This means that all the clubs are together from Ace to King, all the diamonds are together from Ace to King, all the hearts are together from Ace to King, and all the spades are together from Ace to King. To facilitate the calculations in this trick, the sorting of the deck has to be changed. The trick requires that cards are ordered by value and then by suit. This means that the cards are ordered as _AC, AD, AH, AS, 1C, 1D, 1H, 1S, … , QC, QD, QH, QS, KC, KD, KH, KS_. (This detail should not be shared with the spectator.)
 
 # Explanation
 
-The trick is a self working card trick which uses a scheme to encode the hidden fifth card's suit and value in the way the other four other cards are presented.
+The trick is an _almost_ self working card trick which uses a scheme to encode the hidden fifth card's suit and value in the way the other four other cards are presented.
 
-The foundation of this trick is discrete math and Michael Kleber wrote a wonderful article about this trick in [The Mathematical Intelligencer 24, 9–11 (2002)](https://doi-org.lib-proxy.fullerton.edu/10.1007/BF03025305) which explains the math in great detail. (You can also [find this article](https://bfy.tw/QW56) through your favorite search engine.)
+The foundation of this trick is discrete math and Michael Kleber wrote a wonderful article about this trick in [The Mathematical Intelligencer 24, 9–11 (2002)](https://doi-org.lib-proxy.fullerton.edu/10.1007/BF03025305) which explains the math in great detail. (You can also [find this article](https://www.google.com/search?q=michael+kleber+best+card+trick+mathematical+intelligencer) through your favorite search engine.)
 
-Starting with a deck of cards, five cards are selected. Let's imagine the following cards are selected:  or 3 of clubs, 7 of diamonds, 2 of clubs, 10 of spades, and the 3 of hearts.
+Starting with a deck of playing cards, make sure the jokers are removed. Shuffle the cards as many times as you or your spectator likes then select five cards. Let's imagine the following cards are selected: 3 of clubs, 7 of diamonds, 2 of clubs, 10 of spades, and the 3 of hearts.
 
 The cards are handed to the human magician. The magician will first sort the cards into identical suits. Given the hand described above, the magician mentally organizes the cards into:
 
-* clubs: _3C_, _2C_
+* clubs: _2C_, _3C_
 * diamonds: _7D_
 * hearts: _3H_
 * spades: _10S_
 
-We need to use a suit that has at least two cards. In this example, the only suit that has this is the clubs. One card must be the _base_ card and the other card will be the _secret_ card.
+We need to use a suit that has at least two cards. In this example, the only suit that has two cards is the clubs. One card must be the _base_ card and the other card will be the _secret_ card.
 
 The rules for the base card are:
 
@@ -46,7 +46,7 @@ The rules for the base card are:
 
 The rules for the secret card are:
 
-* The secret card must be less than or equal to the (_base_ _card_ _value_ + 6) % 13
+* Must be at most +6 steps less than the secret card; for example a _2C_ is 1 step away from a _3C_ and a _4H_ is 5 steps away from a _QH_. (The steps wrap around.)
 * The secret card is not revealed until the end
 
 In our example, let's select the base card as _2C_ and the secret card as _3C_. This means that the secret card is only +1 away from the base.
@@ -66,11 +66,22 @@ Next the magician must present the remaining three cards in a certain order to s
 
 The computer getting this input will do the math and print out the secret card, in this case _3C_ because _2C_ + 1 is _3C_.
 
-Another example is how we can use modulo arithmetic to perform the trick. Let's imagine the following cards are selected:  or Jack of diamonds, 7 of diamonds, Ace of clubs, King of hearts, and the 5 of hearts. Let's select the base card as the King of hearts and the secret card as the 5 of hearts.
+To generalize this into a formula, _base card value_ + _secret steps_ % 13 is how the computer program knows how to predict the secret card.
+
+Let's try another example where the base card is greater than the secret card.
+
+Let's imagine the following cards are selected:  or Jack of diamonds, 7 of diamonds, Ace of clubs, King of hearts, and the 5 of hearts.
+
+* clubs: _AC_
+* diamonds: _7D_, _JD_
+* hearts: _KH_, _5H_
+* spades: None
+
+Let's select the base card as the King of hearts and the secret card as the 5 of hearts.
 
 This means we need to tell the computer to add 5 to the King and that the secret card's suit is heart.
 
-We tell the computer the first card is _KH_, and then order the cards high, low, middle to tell the computer to add 5 to the King. We enter _JD_, _AC_, _7D_ which means the _secret steps_ is +5. Remember to use the formula (_base card value_ + 5) % 13 which evaluates to 5. Since the base card is a heart, the computer responds with 5H.
+We tell the computer the first card is _KH_, and then order the cards high, low, middle to tell the computer to add 5 to the King. We enter _JD_, _AC_, _7D_ which means the _secret steps_ is +5. Remember to use the formula  _base card value_ + _secret steps_ % 13 which evaluates to 5. Since the base card is a heart, the computer responds with _5H_.
 
 ## Tips
 
@@ -148,7 +159,7 @@ Write a function `void ErrorMessage();` which prints out `"This program may only
 You may wish to write functions that retrive the suit or value of a given card represented by a string. These are short utility functions that make your program more readable.
 
 * string Suit(const string& card);
-* string Value(const string& card);
+* string FaceValue(const string& card);
 
 You shall use [cout](https://en.cppreference.com/w/cpp/io/cout) to print messages to the terminal.
 
