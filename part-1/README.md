@@ -66,11 +66,13 @@ Next the magician must present the remaining three cards in a certain order to s
 
 The computer getting this input will do the math and print out the secret card, in this case _3C_ because _2C_ + 1 is _3C_.
 
-To generalize this into a formula, _base card value_ + _secret steps_ % 13 is how the computer program knows how to predict the secret card.
+The computer calculates it a little differently since the cards have values between 0 and 12. The _2C_ maps to 1, our secret step is 1 so the computer calculates a value of 2 which maps back to a card's face value of 3.
+
+To generalize this into a formula, (_base card value_ + _secret steps_) % 13 is how the computer program knows how to predict the secret card.
 
 Let's try another example where the base card is greater than the secret card.
 
-Let's imagine the following cards are selected:  or Jack of diamonds, 7 of diamonds, Ace of clubs, King of hearts, and the 5 of hearts.
+Let's imagine the following cards are selected: Jack of diamonds, 7 of diamonds, Ace of clubs, King of hearts, and the 5 of hearts.
 
 * clubs: _AC_
 * diamonds: _7D_, _JD_
@@ -81,13 +83,24 @@ Let's select the base card as the King of hearts and the secret card as the 5 of
 
 This means we need to tell the computer to add 5 to the King and that the secret card's suit is heart.
 
-We tell the computer the first card is _KH_, and then order the cards high, low, middle to tell the computer to add 5 to the King. We enter _JD_, _AC_, _7D_ which means the _secret steps_ is +5. Remember to use the formula  _base card value_ + _secret steps_ % 13 which evaluates to 5. Since the base card is a heart, the computer responds with _5H_.
+We tell the computer the first card is _KH_, and then order the cards high, low, middle to tell the computer to add 5 to the King. We enter _JD_, _AC_, _7D_ which means the _secret steps_ is +5. Remember to use the formula (_base card value_ + _secret steps_) % 13 or (12 + 4) % 13 which evaluates to 4. (Remember the values of our cards start from zero and go to 12.) Since the base card is a heart, the computer responds with _5H_.
+
+Since it is quite possible that cards of the same value but of different suits are selected, we will have to map all the cards to have unique values. In this fashion, all the cards that have a face value of 6 will have a unique value. For example, _6C_, _6D_, _6H_, and _6S_ all have a face value of 6 and are of different suits. We cannot order these cards as low, middle, and high unless we factor in the suits. Recall that we'll rank the suits in alphabetical order so _6C_ < _6D_ < _6H_ < _6S. Mapping all the cards to values between 1 and 52 is achieved by recognizing that there are 4 of each card and we can assign a value to each suit: clubs are 1, diamonds are 2, hearts are 3, and spades are 4.
+
+Given a card, separate the card into it's _face value_ and _suit_. Map the _face value_ to a value between 0 and 12, let's call this _simple value_. Using the suit, lookup the _suit's offset_; clubs are 1, diamonds are 2, hearts are 3, and spades are 4. Finally, calculate the _deck value_ using the formula _simple value_ * 4 + _suit's offset_.
+
+Working with a deck that is ordered by value first and suit second, you'll have a deck that is ordered as _AC, AD, AH, AS, 1C, 1D, 1H, 1S,…, QC, QD, QH, QS, KC, KD, KH, KS_. This means _AC_ is 1, _AD_ is 2, _KH_ is 51, and _KS_ is 52. Consider the following examples.
+
+* _AC_ is _simple value_ of 0 and a _suit's offset_ of 1 thus 0 * 4 + 1 = 0
+* _AS_ is _simple value_ of 0 and a _suit's offset_ of 4 thus 0 * 4 + 4 = 4
+* _6C_ is _simple value_ of 5 and a _suit's offset_ of 1 thus 5 * 4 + 1 = 21
+* _6D_ is _simple value_ of 5 and a _suit's offset_ of 2 thus 5 * 4 + 2 = 22
+* _6H_ is _simple value_ of 5 and a _suit's offset_ of 3 thus 5 * 4 + 3 = 23
+* _6S_ is _simple value_ of 5 and a _suit's offset_ of 4 thus 5 * 4 + 4 = 24
+* _QH_ is _simple value_ of 11 and a _suit's offset_ of 3 thus 11 * 4 + 3 = 47
+* _KS_ is _simple value_ of 12 and a _suit's offset_ of 4 thus 12 * 4 + 4 = 52
 
 ## Tips
-
-To facilitate calculations, imagine the deck as one continuous series of cards that are numbered from 1 to 52. Instead of ordering them by suit, order the cards by value. This means that the cards are ordered as _AC, AD, AH, AS, 1C, 1D, 1H, 1S,…, QC, QD, QH, QS, KC, KD, KH, KS_. This subtlety can be accomplished by first taking the cards value and then adding 0 for clubs, 1 for diamonds, 2, for hearts, and 3 for spades. In this fashion the cards _6C_, _6D_, _6H_, and _6S_ will have the values 6, 7, 8, 9. This facilitates looking up the _secret steps_.
-
-Convert the cards to initially have values between 0 and 12 where Ace is 0 and King is 12. Then use the formula card_value * 4 + SuitOffset() to map the card into the range 1 through 52. The value card_value is the value of the card between 0 and 12, and SuiteOffset() returns 1 for clubs, 2 for diamonds, 3 for hearts, and 4 for spades.
 
 When working with if-else-if-else conditions here are some tips to keep in mind:
 

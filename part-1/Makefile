@@ -38,6 +38,8 @@ TIDYFLAGS = "-checks=-*,google-*,modernize-*,readability-*,\
 						 -cppcoreguidelines-avoid-magic-numbers,\
 						 -readability-magic-numbers"
 
+DOXYGEN = doxygen
+
 TARGET = mind_reader
 # C++ Files
 CXXFILES = mind_reader.cc
@@ -70,6 +72,10 @@ clean:
 
 spotless: clean
 	-rm -f $(TARGET) $(DEP) a.out
+	-rm -rf doc-html
+
+doc:
+	$(DOXYGEN) Doxyfile
 
 format:
 	echo "Lines starting with '<' are from your file."
