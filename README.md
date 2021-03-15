@@ -9,6 +9,7 @@ Each exercise subdirectory has its own [Makefile](https://en.wikipedia.org/wiki/
 * all: builds the project
 * clean: removes object and dependency files
 * spotless: removes everything the clean target removes and all binaries
+* doc: generate HTML documentation from the source code using Doxygen
 * format: outputs a [`diff`](https://en.wikipedia.org/wiki/Diff) showing where your formatting differes from the [Google C++ style guide](https://google.github.io/styleguide/cppguide.html)
 * tidy: output of the [linter](https://en.wikipedia.org/wiki/Lint_(software)) to give you tips on how to improve your code
 * headercheck: check to make sure your files have the appropriate header
