@@ -39,6 +39,7 @@ TIDYFLAGS = "-checks=-*,google-*,modernize-*,readability-*,\
 						 -readability-magic-numbers"
 
 DOXYGEN = doxygen
+DOCDIR = doc
 
 TARGET = mind_reader
 # C++ Files
@@ -72,7 +73,7 @@ clean:
 
 spotless: clean
 	-rm -f $(TARGET) $(DEP) a.out
-	-rm -rf doc-html
+	-rm -rf $(DOCDIR)
 
 doc:
 	$(DOXYGEN) Doxyfile
